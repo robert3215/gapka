@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block head %}
+    {{ super() }}
+    <style>
+        html, body {
+            background-image: url('{{ url_for('static', filename='assets/img/background_app.jpg') }}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        .site-heading h2 {
+            color: white; /* Adjust as needed */
+        }
+        /* Add other styles for your content here */
+    </style>
+
+{% endblock %}
+
+{% block content %}
+<header
+    class="masthead"
+    style="padding-top: 4rem; padding-bottom: 2rem; text-align: center; color: white;"
+    
+    >
+
+    <div class="container position-relative px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <div class="site-heading">
+                    <h2>Your Activity Dashboard</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="mb-4">
+    <div class="container px-4 px-lg-5">
+        <div class="row justify-content-between">
+            <div class="col-xl-6 col-lg-6 col-md-6 plot-container mb-4">
+                <h2>Last week overview</h2>
+                {{ act_plot | safe }}
+            </div>
+            <div class="col-xl-4 col-lg-4 col-md-4 plot-container mb-4">
+                <h2>Weekly Calories Burnt</h2>
+                {{ cal_bar | safe }}
+            </div>
+        </div>
+        <div class="row justify-content-between">
+            <div class="col-xl-12 col-lg-12 col-md-12 plot-container mb-4">
+                <h2>Three months overview </h2>
+                {{ weekly_plt | safe }}
+            </div>
+            <!-- <div class="col-xl-4 col-lg-4 col-md-4 plot-container mb-4">
+                <h2>Another Calorie Chart</h2>
+                {{ cal_bar | safe }}
+            </div> -->
+        </div>
+    </div>
+</main>
+{% endblock %}
