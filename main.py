@@ -24,12 +24,12 @@ app = Flask(__name__, static_folder='static')
 
 garmin_log = os.environ.get('EMAIL_GARMIN')
 garmin_pswd = os.environ.get('PASSWORD_GARMIN')
-gemini_key = os.getenv('GEMINI_API')
+gemini_key = os.environ.get('GEMINI_API')
 
 client = genai.Client(api_key=gemini_key)
 
-gapka_id = os.environ.get('GAPKA')
-app.config['SECRET_KEY'] = gapka_id
+gapka_id =  os.environ.get('GAPKA')
+app.config['SECRET_KEY'] = gemini_key
 
 # run_start_date = "2025-03-26"
 # data_metrics = garmin.get_max_metrics(run_start_date)
@@ -231,6 +231,6 @@ def scheduled_database_update():
 
 if __name__ == "__main__":
     database_update()
-    app.run(debug=True)
+    app.run(debug=False)
 
 
