@@ -29,7 +29,7 @@ gemini_key = os.environ.get('GEMINI_API')
 client = genai.Client(api_key=gemini_key)
 
 gapka_id =  os.environ.get('GAPKA')
-app.config['SECRET_KEY'] = gemini_key
+app.config['SECRET_KEY'] = gapka_id
 
 # run_start_date = "2025-03-26"
 # data_metrics = garmin.get_max_metrics(run_start_date)
