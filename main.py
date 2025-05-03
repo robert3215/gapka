@@ -217,7 +217,7 @@ def meal_idea():
         - Start the response with the name of the first meal.
         - Keep the tone motivating but concise.
         """
-        print(prompt)
+        # print(prompt)
 
         response = client.models.generate_content(model="gemini-2.0-flash", contents=prompt)
         text = markdown(response.text)
