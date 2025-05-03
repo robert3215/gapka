@@ -187,8 +187,8 @@ def meal_idea():
                 # time = devider(item["duration"])
                 item["duration"] = devider(item["duration"])
             if item["distance"]>1:
-                item["distance"] = f"{round(item["distance"], 2)}m"
-            last_days.append(f"- Activity: {item["activity_type"]}, duration: {item["duration"]}, distance: {item["distance"]}, calories burnt: {item["calories"]}")
+                item["distance"] = f"{round(item['distance'], 2)}m"
+            last_days.append(f"- Activity: {item['activity_type']}, duration: {item['duration']}, distance: {item['distance']}, calories burnt: {item['calories']}")
         formatted_activity = "My recent activities over the past 3 days include:\n" + "\n".join(last_days)
         # print(last_days)
         if len(leftovers) >=1:
