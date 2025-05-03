@@ -1,1 +1,1 @@
-web: gunicorn gapka.main:app
+web: gunicorn main:app
