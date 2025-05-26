@@ -58,8 +58,10 @@ def generate_plot_week_activity(data):
 def generate_bar_chart_calories(data):
     """Generates a plot with calories burnt weekly"""
     df = pd.DataFrame(data)
-    df_calories = df.groupby(df['date_time'].dt.date)['calories'].sum().reset_index()
-    df_calories.rename(columns={'date_time': 'date'}, inplace=True)
+    df['date_time'] = pd.to_datetime(df['date_time']) 
+    df['date'] = df['date_time'].dt.date
+    df_calories = df.groupby('date', as_index=False)['calories'].sum()
+    df_calories['date'] = df_calories['date'].astype(str)
 
     trace = go.Bar(
         x=df_calories['date'],
@@ -67,11 +69,11 @@ def generate_bar_chart_calories(data):
         name='Calories Burnt',
         marker=dict(color='red'), 
         hoverinfo='x+y',
-        hovertemplate='Date: %{x}<br>Calories Burnt: %{y}<extra></extra>')
+        hovertemplate='Date: %{x|%b %d}<br>Calories Burnt: %{y}<extra></extra>')
 
     layout = go.Layout(
         title='Daily Calories Burnt',
-        xaxis=dict(title='Date'),
+        xaxis=dict(title='Date', tickformat='%b %d'),
         yaxis=dict(title='Calories Burnt'),
         template='plotly_dark',
         width=600

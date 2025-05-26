@@ -25,6 +25,7 @@ app = Flask(__name__, static_folder='static')
 garmin_log = os.environ.get('EMAIL_GARMIN')
 garmin_pswd = os.environ.get('PASSWORD_GARMIN')
 gemini_key = os.environ.get('GEMINI_API')
+database_url = os.environ.get('DATABASE_URL_GAR')
 
 client = genai.Client(api_key=gemini_key)
 
@@ -46,11 +47,11 @@ scheduler.start()
 
 #Database
 db = SQLAlchemy()
-DB_NAME = "garmin_data.db"
+# database_url = "sqlite:///garmin_data.db"
 class Base(DeclarativeBase):
     pass
 
-app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_NAME}"
+app.config["SQLALCHEMY_DATABASE_URI"] = database_url
 db.init_app(app)
 
 Bootstrap5(app)
@@ -105,11 +106,11 @@ def database_update():
     garmin.garth.dump(GARTH_HOME)
 
     today = date.today() 
-    last_week= date.today()- timedelta(days=7)
+    past_three_months = date.today()- timedelta(days=90)
 
     today = today.isoformat()
-    last_week = last_week.isoformat()
-    data = garmin.get_activities_by_date(last_week,today)
+    past_three_months = past_three_months.isoformat()
+    data = garmin.get_activities_by_date(past_three_months,today)
 
     # activity_data_slicer takes certain data from garminconnect 
     all_activites = activity_data_slicer(data)
@@ -159,9 +160,13 @@ def home():
     last_week_data = database_data(one_week_back,today)
     three_months_data = database_data(three_months,today)
     
-    act_last_week = generate_plot_week_activity(last_week_data)
-    
-    calories_last_week = generate_bar_chart_calories(last_week_data)
+    if last_week_data:
+        act_last_week = generate_plot_week_activity(last_week_data)
+        calories_last_week = generate_bar_chart_calories(last_week_data)
+    else:
+        act_last_week = "<p>No activities in the past week</p>"
+        calories_last_week = "<p>No activities in the past week</p>"
+        
     weekly_act = generate_weekly_activites_plot(three_months_data)
 
     return render_template("index.html", act_plot=act_last_week, cal_bar = calories_last_week, weekly_plt =weekly_act)
@@ -231,6 +236,6 @@ def scheduled_database_update():
 
 if __name__ == "__main__":
     database_update()
-    app.run(debug=False)
+    app.run(debug=True)
 
 
