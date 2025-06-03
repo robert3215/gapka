@@ -168,8 +168,7 @@ def home():
     else:
         act_last_week = "<p>No activities in the past week</p>"
         calories_last_week = "<p>No activities in the past week</p>"
-    logger.info(f"Three months data retrieved on Render: {three_months_data[:2]}...") 
-    logger.info(f"Type of first element in three_months_data: {type(three_months_data[0]['date_time']) if three_months_data else 'No data'}")
+    
     weekly_act = generate_weekly_activites_plot(three_months_data)
 
     return render_template("index.html", act_plot=act_last_week, cal_bar = calories_last_week, weekly_plt =weekly_act)
@@ -238,7 +237,8 @@ def scheduled_database_update():
     database_update()  
 
 if __name__ == "__main__":
+    app.run()
     database_update()
-    app.run(debug=True)
+
 
 
