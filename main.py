@@ -18,9 +18,11 @@ from google import genai
 from markdown import markdown
 import pandas as pd
 from flask_apscheduler import APScheduler
-
+import logging
 app = Flask(__name__, static_folder='static')
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 garmin_log = os.environ.get('EMAIL_GARMIN')
 garmin_pswd = os.environ.get('PASSWORD_GARMIN')
@@ -166,7 +168,8 @@ def home():
     else:
         act_last_week = "<p>No activities in the past week</p>"
         calories_last_week = "<p>No activities in the past week</p>"
-        
+    logger.info(f"Three months data retrieved on Render: {three_months_data[:2]}...") 
+    logger.info(f"Type of first element in three_months_data: {type(three_months_data[0]['date_time']) if three_months_data else 'No data'}")
     weekly_act = generate_weekly_activites_plot(three_months_data)
 
     return render_template("index.html", act_plot=act_last_week, cal_bar = calories_last_week, weekly_plt =weekly_act)
