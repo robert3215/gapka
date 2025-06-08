@@ -18,11 +18,9 @@ from google import genai
 from markdown import markdown
 import pandas as pd
 from flask_apscheduler import APScheduler
-import logging
+
 app = Flask(__name__, static_folder='static')
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 garmin_log = os.environ.get('EMAIL_GARMIN')
 garmin_pswd = os.environ.get('PASSWORD_GARMIN')
@@ -94,10 +92,6 @@ class Activity(db.Model):
             dictionary[column.name] = getattr(self, column.name)
         return dictionary
 
-# Creates db
-with app.app_context():
-    db.create_all() 
-    
 
 def database_update():
     """ It logs in to garminconnect and takes out data """
@@ -121,11 +115,8 @@ def database_update():
     with app.app_context():
         for activity in rever_list:
             activity_id = activity["activityId"]
-            # print(len(activity))
-            # print(activity)
             date_time_conv = datetime.datetime.strptime(activity["startTimeLocal"], "%Y-%m-%d %H:%M:%S")
             exists = db.session.query(Activity).filter_by(activity_id=activity["activityId"]).first()
-            # print(exists)
             if not exists: 
                 new_activity = Activity( activity_id = activity["activityId"] , date_time=date_time_conv, distance=activity.get("distance"), 
                                     activity_type = activity.get("typeKey"), duration = activity.get("duration"), elevation_gain = activity.get("elevationGain"), 
@@ -237,8 +228,9 @@ def scheduled_database_update():
     database_update()  
 
 if __name__ == "__main__":
+    with app.app_context():
+        db.create_all() 
+        database_update()
     app.run()
-    database_update()
-
 
 
