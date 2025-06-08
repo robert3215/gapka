@@ -65,8 +65,8 @@ class MealChoice(FlaskForm):
     submit = SubmitField('Generate meal')
 
 class Activity(db.Model):
-    id = db.Column(db.BigInteger, primary_key=True)
-    activity_id = db.Column(db.Integer, unique=True)
+    id = db.Column(db.Integer, primary_key=True)
+    activity_id = db.Column(db.BigInteger, unique=True)
     date_time = db.Column(db.DateTime,  nullable=False)
     distance = db.Column(db.Float)
     activity_type = db.Column(db.String(30), nullable=False)
