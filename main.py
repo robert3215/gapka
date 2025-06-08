@@ -92,7 +92,6 @@ class Activity(db.Model):
             dictionary[column.name] = getattr(self, column.name)
         return dictionary
 
-
 def database_update():
     """ It logs in to garminconnect and takes out data """
     garmin = garminconnect.Garmin(garmin_log, garmin_pswd)
@@ -132,6 +131,10 @@ def database_update():
                     db.session.rollback() 
                     print(f"IntegrityError adding activity {activity_id}: {error}")
 
+with app.app_context():
+        db.create_all()
+        database_update()
+    
 
 # Query for records between start and end date 
 def database_data(start_date, end_date):
@@ -216,9 +219,12 @@ def meal_idea():
         - Keep the tone motivating but concise.
         """
         # print(prompt)
-
-        response = client.models.generate_content(model="gemini-2.0-flash", contents=prompt)
-        text = markdown(response.text)
+        try:
+            response = client.models.generate_content(model="gemini-2.0-flash", contents=prompt)
+            text = markdown(response.text)
+        except Exception as e:
+            text = "Sorry, I couldn't generate a meal idea this time"
+            print(f"Error: {e}")
 
     return render_template("meal_idea.html", form=form, text=text)
 
@@ -228,9 +234,6 @@ def scheduled_database_update():
     database_update()  
 
 if __name__ == "__main__":
-    with app.app_context():
-        db.create_all() 
-        database_update()
     app.run()
 
 
