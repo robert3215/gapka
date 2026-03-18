@@ -113,9 +113,9 @@ def generate_weekly_activites_plot(data):
         traces.append(go.Scatter(
             x=activity_data['week_start'],
             y=activity_data['duration_hours'],
-            mode='lines+markers+text',
+            mode='lines+markers',
             name=activity,
-            # text=activity_data.apply(lambda row: row['duration_str'] if row['duration_hours'] > 0 else '', axis=1),
+            text=activity_data.apply(lambda row: row['duration_str'] if row['duration_hours'] > 0 else '', axis=1),
             textposition='top center',
             hoverinfo='text+x+y',
             hovertemplate=f'Week Start: %{{x|%Y-%m-%d}}<br>Duration: %{{y:.1f}} hours (%{{text}})<br>Activity: {activity}<extra></extra>'))

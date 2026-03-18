@@ -25,7 +25,7 @@ app = Flask(__name__, static_folder='static')
 garmin_log = os.environ.get('EMAIL_GARMIN')
 garmin_pswd = os.environ.get('PASSWORD_GARMIN')
 gemini_key = os.environ.get('GEMINI_API')
-database_url = os.environ.get('DATABASE_URL_GAR')
+# database_url = os.environ.get('DATABASE_URL_GAR')
 
 client = genai.Client(api_key=gemini_key)
 
@@ -47,7 +47,7 @@ scheduler.start()
 
 #Database
 db = SQLAlchemy()
-# database_url = "sqlite:///garmin_data.db"
+database_url = "sqlite:///garmin_data.db"
 class Base(DeclarativeBase):
     pass
 
@@ -203,8 +203,8 @@ def meal_idea():
         prompt = f"""
         Given my recent activities over the last 3 days.
         {formatted_activity}
-        I'm a 28 years old male, 176 cm tall, weighing 72 kg. My goal is to {power} my weight.
-        Please recommend exactly 2 detailed {type_of_meal} recipes that include {type_of_food}. {fridge_stock} 
+        I'm a 29 years old male, 176 cm tall, weighing 72 kg. My goal is to {power} my weight.
+        Generate EXACTLY 2 detailed {type_of_meal} recipes that include {type_of_food}. {fridge_stock} 
         
         Each recipe should be structured like this:
         - Meal Name
@@ -220,7 +220,7 @@ def meal_idea():
         """
         # print(prompt)
         try:
-            response = client.models.generate_content(model="gemini-2.0-flash", contents=prompt)
+            response = client.models.generate_content(model="gemini-3-flash-preview", contents=prompt)
             text = markdown(response.text)
         except Exception as e:
             text = "Sorry, I couldn't generate a meal idea this time"
@@ -228,10 +228,10 @@ def meal_idea():
 
     return render_template("meal_idea.html", form=form, text=text)
 
-@scheduler.task('cron', id='update_db', hour='12,19,23', timezone='UTC')
-def scheduled_database_update():
-    print("Running scheduled database update")
-    database_update()  
+# @scheduler.task('cron', id='update_db', hour='12,19,23', timezone='UTC')
+# def scheduled_database_update():
+#     print("Running scheduled database update")
+#     database_update()  
 
 if __name__ == "__main__":
     app.run()
