@@ -25,7 +25,7 @@ app = Flask(__name__, static_folder='static')
 garmin_log = os.environ.get('EMAIL_GARMIN')
 garmin_pswd = os.environ.get('PASSWORD_GARMIN')
 gemini_key = os.environ.get('GEMINI_API')
-# database_url = os.environ.get('DATABASE_URL_GAR')
+database_url = os.environ.get('DATABASE_URL_GAR')
 
 client = genai.Client(api_key=gemini_key)
 
@@ -47,7 +47,7 @@ scheduler.start()
 
 #Database
 db = SQLAlchemy()
-database_url = "sqlite:///garmin_data.db"
+# database_url = "sqlite:///garmin_data.db"
 class Base(DeclarativeBase):
     pass
 
@@ -228,10 +228,10 @@ def meal_idea():
 
     return render_template("meal_idea.html", form=form, text=text)
 
-# @scheduler.task('cron', id='update_db', hour='12,19,23', timezone='UTC')
-# def scheduled_database_update():
-#     print("Running scheduled database update")
-#     database_update()  
+@scheduler.task('cron', id='update_db', hour='12,19,23', timezone='UTC')
+def scheduled_database_update():
+    print("Running scheduled database update")
+    database_update()  
 
 if __name__ == "__main__":
     app.run()
